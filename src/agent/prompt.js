@@ -16,8 +16,7 @@ Respond ONLY in JSON. No explanation, no markdown, no backticks.
 }
 
 Rules:
-- summary must be in the same language the user spoke
-- if input is mixed Chinese/English, match the dominant language
+- always respond in English regardless of input language
 - be conservative with execute: only use it if there is an obvious action
 - never add interpretation beyond what the user said
 - never return anything outside the JSON object`;

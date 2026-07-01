@@ -1,4 +1,4 @@
-# Pocket
+# catch-later
 
 A thought buffer with voice capture. Speak a thought, let AI process it, review when you're free.
 
@@ -15,7 +15,7 @@ Most note apps solve the wrong problem. They optimize for organization, not for 
 
 ---
 
-## What Pocket Does
+## What catch-later Does
 
 One tap to record. Claude processes the transcript into a structured entry. When you have time, open the buffer, decide what to do with each item, mark it done.
 
@@ -26,7 +26,7 @@ The core loop: **capture → process → review → clear.**
 ## Key Design Decisions
 
 **Thought buffer, not note-taking app**  
-Pocket has no folders, no tags, no search. It holds thoughts temporarily until you decide what to do with them. The end state is an empty buffer, not an organized archive.
+catch-later has no folders, no tags, no search. It holds thoughts temporarily until you decide what to do with them. The end state is an empty buffer, not an organized archive.
 
 **Two action types only**  
 `execute` — there is a clear next action.  

@@ -1,80 +1,122 @@
 import { useEntries } from '../../hooks/useEntries';
 
-const badgeColor = { execute: '#c05621', keep: '#2b6cb0', unprocessed: '#718096' };
-
 function formatDate(ts) {
-  return new Date(ts).toLocaleDateString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  return new Date(ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
 export default function Archive() {
   const { doneEntries, deleteEntry } = useEntries();
 
-  if (doneEntries.length === 0) {
-    return (
-      <p style={{ textAlign: 'center', color: '#718096', padding: 32 }}>
-        nothing here yet
-      </p>
-    );
-  }
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '0 16px 16px' }}>
-      {doneEntries.map((entry) => (
-        <div
-          key={entry.id}
-          style={{
-            border: '1px solid #e2e8f0',
-            borderRadius: 8,
-            padding: 16,
-            background: '#f7fafc',
-            opacity: 0.85,
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 8 }}>
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                textTransform: 'uppercase',
-                letterSpacing: 1,
-                color: '#fff',
-                background: badgeColor[entry.action_type] ?? '#718096',
-                borderRadius: 4,
-                padding: '2px 6px',
-                flexShrink: 0,
-              }}
-            >
-              {entry.action_type}
-            </span>
-            <span style={{ fontSize: 15 }}>{entry.summary}</span>
-          </div>
+    <div style={{
+      minHeight: '100svh',
+      background: '#060606',
+      fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    }}>
+      {/* Header */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        padding: '56px 24px 0',
+        background: '#060606',
+        zIndex: 10,
+      }}>
+        <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,252,242,0.75)' }}>
+          Archive
+        </span>
+      </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 12, color: '#a0aec0' }}>
-              {entry.done_at ? formatDate(entry.done_at) : '—'}
+      {/* Entry list */}
+      <div style={{
+        position: 'absolute',
+        top: 90,
+        bottom: 70,
+        left: 0,
+        right: 0,
+        overflowY: 'auto',
+        padding: '0 16px',
+      }}>
+        {doneEntries.length === 0 ? (
+          <div style={{
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <span style={{ fontSize: 13, fontWeight: 300, color: 'rgba(255,255,255,0.2)' }}>
+              nothing here yet
             </span>
-            <button
-              onClick={() => deleteEntry(entry.id)}
+          </div>
+        ) : (
+          doneEntries.map((entry, i) => (
+            <div
+              key={entry.id}
               style={{
-                fontSize: 13,
-                padding: '4px 12px',
-                border: 'none',
-                borderRadius: 6,
-                background: '#fff5f5',
-                color: '#c53030',
-                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'space-between',
+                gap: 12,
+                padding: '16px 8px 14px',
+                borderTop: i === 0 ? '0.5px solid rgba(255,255,255,0.06)' : 'none',
+                borderBottom: '0.5px solid rgba(255,255,255,0.06)',
               }}
             >
-              Delete
-            </button>
-          </div>
-        </div>
-      ))}
+              {/* Left */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{
+                  fontSize: 9,
+                  color: 'rgba(255,255,255,0.28)',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  marginBottom: 6,
+                }}>
+                  {entry.action_type}
+                </div>
+                <div style={{
+                  fontSize: 13,
+                  fontWeight: 300,
+                  color: 'rgba(248,244,234,0.82)',
+                  lineHeight: 1.5,
+                  letterSpacing: '-0.01em',
+                }}>
+                  {entry.summary}
+                </div>
+                {entry.done_at && (
+                  <div style={{
+                    fontSize: 10,
+                    color: 'rgba(255,255,255,0.18)',
+                    marginTop: 4,
+                  }}>
+                    {formatDate(entry.done_at)}
+                  </div>
+                )}
+              </div>
+
+              {/* Right */}
+              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'flex-start' }}>
+                <button
+                  onClick={() => deleteEntry(entry.id)}
+                  style={{
+                    fontSize: 11,
+                    color: 'rgba(255,255,255,0.18)',
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
+                    fontFamily: 'inherit',
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }
