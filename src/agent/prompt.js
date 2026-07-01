@@ -20,5 +20,6 @@ Rules:
 - summary must be max 200 characters
 - summary must preserve ALL specific details: names, timestamps, locations, source, intended use — these are retrieval anchors, never drop them
 - be conservative with execute: only use it if there is an obvious action
+- execute only when the user explicitly says they need to DO something — "could be useful", "worth keeping", "good reference" are keep, not execute
 - never add interpretation beyond what the user said
 - never return anything outside the JSON object`;
