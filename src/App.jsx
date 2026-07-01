@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import Capture from './components/Capture';
 import Buffer from './components/Buffer';
@@ -11,20 +12,10 @@ function Nav() {
 
   return (
     <nav style={{
-      position: 'fixed',
-      bottom: 26,
-      left: '50%',
-      transform: 'translateX(-50%)',
       display: 'flex',
-      alignItems: 'center',
-      gap: 2,
-      padding: '5px 6px',
-      background: 'rgba(20,20,20,0.82)',
-      backdropFilter: 'blur(40px)',
-      WebkitBackdropFilter: 'blur(40px)',
-      border: '0.5px solid rgba(255,255,255,0.08)',
-      borderRadius: 100,
-      zIndex: 100,
+      borderBottom: '0.5px solid rgba(255,255,255,0.06)',
+      background: '#060606',
+      flexShrink: 0,
     }}>
       {[
         { to: '/', label: 'Capture' },
@@ -40,18 +31,20 @@ function Nav() {
             to={to}
             end={to === '/'}
             style={{
+              flex: 1,
               display: 'flex',
               alignItems: 'center',
-              gap: 4,
-              padding: '6px 14px',
-              borderRadius: 100,
+              justifyContent: 'center',
+              gap: 5,
+              padding: '10px 0',
               textDecoration: 'none',
               fontSize: 13,
               letterSpacing: '-0.01em',
               fontWeight: isActive ? 500 : 400,
               color: isActive ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)',
-              background: isActive ? 'rgba(255,255,255,0.10)' : 'transparent',
-              transition: 'all 0.18s ease',
+              background: isActive ? 'rgba(255,255,255,0.08)' : 'transparent',
+              borderRadius: '8px 8px 0 0',
+              transition: 'all 0.15s ease',
             }}
           >
             {label}
@@ -70,16 +63,50 @@ function Nav() {
   );
 }
 
+function FocusOnMount() {
+  useEffect(() => {
+    window.focus();
+  }, []);
+  return null;
+}
+
+function EscHandler() {
+  useEffect(() => {
+    const handleKeyDown = async (e) => {
+      if (e.key === 'Escape') {
+        if (window.__TAURI__) {
+          const { invoke } = await import('@tauri-apps/api/core');
+          invoke('hide_window');
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+  return null;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
-      <div style={{ minHeight: '100svh', background: '#060606' }}>
-        <Routes>
-          <Route path="/" element={<Capture />} />
-          <Route path="/buffer" element={<Buffer />} />
-          <Route path="/archive" element={<Archive />} />
-        </Routes>
+      <FocusOnMount />
+      <EscHandler />
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100svh',
+        background: '#060606',
+        fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+        overflow: 'hidden',
+      }}>
         <Nav />
+        <main style={{ flex: 1, overflow: 'hidden' }}>
+          <Routes>
+            <Route path="/" element={<Capture />} />
+            <Route path="/buffer" element={<Buffer />} />
+            <Route path="/archive" element={<Archive />} />
+          </Routes>
+        </main>
       </div>
     </BrowserRouter>
   );

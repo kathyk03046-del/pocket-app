@@ -11,22 +11,18 @@ export default function Buffer() {
 
   return (
     <div style={{
-      minHeight: '100svh',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
       background: '#060606',
-      fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
     }}>
       {/* Header */}
       <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'baseline',
-        padding: '56px 24px 0',
-        background: '#060606',
-        zIndex: 10,
+        padding: '16px 24px 10px',
+        flexShrink: 0,
       }}>
         <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,252,242,0.75)' }}>
           Buffer
@@ -37,15 +33,7 @@ export default function Buffer() {
       </div>
 
       {/* Entry list */}
-      <div style={{
-        position: 'absolute',
-        top: 90,
-        bottom: 70,
-        left: 0,
-        right: 0,
-        overflowY: 'auto',
-        padding: '0 16px',
-      }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '0 16px' }}>
         {sorted.length === 0 ? (
           <div style={{
             height: '100%',
@@ -84,7 +72,6 @@ export default function Buffer() {
                 borderBottom: '0.5px solid rgba(255,255,255,0.06)',
               }}
             >
-              {/* Left */}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{
                   fontSize: 9,
@@ -106,7 +93,6 @@ export default function Buffer() {
                 </div>
               </div>
 
-              {/* Right */}
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',

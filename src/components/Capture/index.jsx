@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useVoiceCapture } from '../../hooks/useVoiceCapture';
 import { useEntries } from '../../hooks/useEntries';
 import { processTranscript } from '../../agent/processor';
@@ -9,17 +9,48 @@ export default function Capture() {
   const { isRecording, transcript, startRecording, stopRecording, clearTranscript, error: voiceError } = useVoiceCapture();
   const { addEntry } = useEntries();
   const [processing, setProcessing] = useState(false);
+  const spaceDownRef = useRef(false);
 
   const animDuration = isRecording ? '2.8s' : '5.5s';
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.code === 'Space' && !e.repeat) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!spaceDownRef.current && !processing) {
+          spaceDownRef.current = true;
+          startRecording();
+        }
+      }
+    };
+    const handleKeyUp = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        e.stopPropagation();
+        if (spaceDownRef.current) {
+          spaceDownRef.current = false;
+          handleStop();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [processing, startRecording]);
+
   async function handleStop() {
-    stopRecording();
-    if (!transcript.trim()) return;
+    if (!isRecording) return;
     setProcessing(true);
     try {
-      const result = await processTranscript(transcript);
+      const text = await stopRecording();
+      if (!text.trim()) return;
+      const result = await processTranscript(text);
       await addEntry({
-        raw_transcript: transcript,
+        raw_transcript: text,
         summary: result.summary,
         action_type: result.action_type,
         next_action: result.next_action,
@@ -136,7 +167,18 @@ export default function Capture() {
         padding: '0 32px',
         pointerEvents: 'none',
       }}>
-        {!isRecording && !processing && !transcript && (
+        {voiceError && voiceError !== 'not supported' && !isRecording && !processing && (
+          <span style={{
+            fontSize: 13,
+            fontWeight: 300,
+            color: 'rgba(255,100,100,0.7)',
+            textAlign: 'center',
+            letterSpacing: '-0.01em',
+          }}>
+            {voiceError}
+          </span>
+        )}
+        {!isRecording && !processing && !transcript && !voiceError && (
           <span style={{
             fontSize: 14,
             fontWeight: 300,

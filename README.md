@@ -17,7 +17,7 @@ Most note apps solve the wrong problem. They optimize for organization, not for 
 
 ## What catch-later Does
 
-One tap to record. Claude processes the transcript into a structured entry. When you have time, open the buffer, decide what to do with each item, mark it done.
+One tap to record. GPT-4o-mini processes the transcript into a structured entry. When you have time, open the buffer, decide what to do with each item, mark it done.
 
 The core loop: **capture → process → review → clear.**
 
@@ -54,10 +54,10 @@ Each layer has one job. Changes in one layer do not propagate to others.
 
 ## Stack
 
-- React + Vite
-- Claude API (claude-sonnet-4-6) for transcript processing
+- React + Vite + Tauri
+- OpenAI Whisper for voice transcription
+- OpenAI GPT-4o-mini for transcript processing
 - Dexie.js for IndexedDB
-- Web Speech API for voice capture
 
 ---
 
@@ -69,18 +69,16 @@ cd pocket-app
 npm install
 ```
 
-Create a `.env` file:
+Get an OpenAI API key from [platform.openai.com](https://platform.openai.com) and create a `.env` file:
 
 ```
-VITE_CLAUDE_API_KEY=your_claude_api_key_here
+VITE_OPENAI_API_KEY=your_openai_api_key_here
 ```
-
 
 ```bash
-npm run dev
+npm run dev       # browser (web)
+npx tauri dev     # desktop app
 ```
-
-Requires a Chromium-based browser for Web Speech API support.
 
 ---
 
