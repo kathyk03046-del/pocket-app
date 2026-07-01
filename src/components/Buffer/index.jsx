@@ -60,14 +60,10 @@ export default function Buffer() {
               >
                 {entry.action_type}
               </span>
-              <span style={{ fontSize: 15 }}>{entry.summary}</span>
+              <span style={{ fontSize: 15 }}>
+                {entry.action_type === 'execute' ? entry.next_action : entry.summary}
+              </span>
             </div>
-
-            {entry.next_action && (
-              <p style={{ margin: '0 0 12px', fontSize: 13, color: '#4a5568' }}>
-                → {entry.next_action}
-              </p>
-            )}
 
             <div style={{ display: 'flex', gap: 8 }}>
               <button onClick={() => markDone(id)} style={btnStyle('#276749', '#fff')}>Done</button>
